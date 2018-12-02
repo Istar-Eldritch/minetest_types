@@ -1,0 +1,14 @@
+{
+  "name": "minetest_types",
+  "version": "1.0.0",
+  "description": "Type definitions for minetest",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "3.2.1"
+  }
+}

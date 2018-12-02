@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "es2016"],
+    "target": "es6",
+    "inlineSourceMap": true,
+    "isolatedModules": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "noImplicitUseStrict": false,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "luaTarget": "5.1",
+  "luaLibImport": "none",
+  "exclude": ["node_modules", "dist"],
+  "compileOnSave": false,
+  "buildOnSave": false
+}
