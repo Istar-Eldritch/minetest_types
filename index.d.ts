@@ -5006,334 +5006,336 @@ minetest.set_mapgen_params(mapgen_params)
     function write_json(...args: any[]): any;
 
   }
+
+  export type PlayerObject = ObjectRef;
+
+  export interface NodeDefinition {
+    drawtype: DrawType;
+    visual_scale?: number;
+    tiles: string | [string, string, string, string, string, string];
+    special_tiles?: string[];
+    use_texture_alpha?: boolean;
+    alpha?: number;
+    post_effect_color?: Color;
+    inventory_image?: string | [string, string, string];
+    wield_image?: string | [string, string, string];
+    paramtype?: 'none' | 'light';
+    paramtype2?: 'wallmounted' | 'facedir';
+    is_ground_content?: boolean;
+    sunlight_propagates?: boolean;
+    walkable?: boolean;
+    pointable?: boolean;
+    diggable?: boolean;
+    climbable?: boolean;
+    buildable_to?: boolean;
+    drop?: Item | Item[] | {max_items: number; items: DropDefinition[]; };
+    stack_max?: number;
+    liquidtype?: 'none' | 'source' | 'flowing';
+    liquid_alternative_flowing?: any;
+    liquid_alternative_source?: any;
+    liquid_viscosity?: number;
+    liquid_renewable?: boolean;
+    light_source?: number;
+    damage_per_second?: number;
+    node_box?: NodeBox;
+    selection_box?: NodeBox;
+    collision_box?: NodeBox;
+    sounds?: {
+      footstep?: SimpleSoundSpec;
+      dig?: SimpleSoundSpec;
+      dug?: SimpleSoundSpec;
+    };
+    on_construct?: (pos: Vector3D) => void;
+    on_destruct?: (pos: Vector3D) => void;
+    after_destruct?: (pos: Vector3D, oldnode: Node) => void;
+    on_place?: (item: ItemStack, placer: ObjectRef, pos: Vector3D, pointedthing: PointedThing) => void;
+    on_drop?: (item: ItemStack, dropper: ObjectRef, pos: Vector3D) => void;
+    on_use?: (item: ItemStack, player: ObjectRef, pointedthing: PointedThing) => void;
+    on_punch?: (item: ItemStack, node: Node, player: ObjectRef, pointedthing: PointedThing) => void;
+    on_dig?: (pos: Vector3D, node: Node, player: ObjectRef) => void;
+    on_timer?: (pos: Vector3D, elapsed: number) => void;
+    on_receive_fields?: (pos: Vector3D, formname: any, fields: {[k: string]: any}, sender: PlayerObject) => void;
+    allow_metadata_inventory_move?: (
+      pos: Vector3D, from_list: string, from_index: number, to_list: string,
+      to_index: number, count: number, player: PlayerObject,
+    ) => void;
+    allow_metadata_inventory_put?: (
+      pos: Vector3D, listname: string, index: number,
+      stack: ItemStack, player: PlayerObject,
+    ) => void;
+    allow_metadta_inventory_take?: (
+      pos: Vector3D, listname: string, index: number, stack: ItemStack, player: PlayerObject,
+    ) => void;
+    on_metadata_inventory_move?: (
+      pos: Vector3D, from_list: string, from_index: number, to_list: string,
+      to_index: number, count: number, player: PlayerObject,
+    ) => void;
+    on_metadata_inventory_put?: (
+      pos: Vector3D, listname: string, index: number, stack: ItemStack, player: PlayerObject,
+    ) => void;
+    on_metadta_inventory_take?: (
+      pos: Vector3D, listname: string, index: number, stack: ItemStack, player: PlayerObject,
+    ) => void;
+
+    after_place_node?: (pos: Vector3D, placer: ObjectRef, item: ItemStack, pointedthing: PointedThing) => void;
+    can_dig?: (pos: Vector3D, player: PlayerObject) => void;
+    after_dig_node?: (pos: Vector3D, oldnode: Node, old_meta: MetaDataRef, digger: ObjectRef) => void;
+    on_rightclick?: (pos: Vector3D, node: Node, player: PlayerObject, stack: ItemStack, pointed: PointedThing) => void;
+
+    on_blast?: (pos: Vector3D, intensity?: number) => void;
+  }
+
+  export interface Node {
+    name: string;
+    param1: any;
+    param2: any;
+  }
+
+  export type PointedThing = PointedObject | PointedNothing | PointedNode;
+
+  export interface PointedObject {
+    type: 'object';
+    ref: ObjectRef;
+  }
+
+  export interface PointedNothing {
+    type: 'nothing';
+  }
+
+  export interface PointedNode {
+    type: 'node';
+    under: Vector3D;
+    above: Vector3D;
+  }
+
+  export interface DropDefinition {
+    items: Item[];
+    rarity: number;
+    tools: string[];
+  }
+
+  export type SimpleSoundSpec = string | {name?: string; gain?: number};
+
+  export type NodeBox = NodeBoxRegular | NodeBoxWallmounted | NodeBoxConnected;
+
+  export interface NodeBoxRegular {
+    type: 'regular';
+  }
+
+  export interface NodeBoxWallmounted {
+    type: 'fixed';
+    fixed: Box | Box[];
+  }
+
+  export interface NodeBoxConnected {
+    type: 'connected';
+    fixed: Box | Box[];
+    connect_top: Box | Box[];
+    connect_bottom: Box | Box[];
+    connect_front: Box | Box[];
+    connect_left: Box | Box[];
+    connect_right: Box | Box[];
+    connect_back: Box | Box[];
+  }
+
+  export type Box = [number, number, number, number, number, number];
+
+  export interface Color {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+  }
+
+  export type DrawType
+    = 'normal'
+    | 'airlike'
+    | 'allfaces'
+    | 'allfaces_optional'
+    | 'glass_like'
+    | 'glasslike_framed'
+    | 'glasslike_framed_optional'
+    | 'liquid'
+    | 'flowingliquied'
+    | 'torchlike'
+    | 'signlike'
+    | 'plantlike'
+    | 'raillike'
+    | 'fencelike'
+    | 'firelike'
+    | 'nodebox'
+    | 'mesh';
+
+  export interface LuaEntityProperties {
+    initial_properties?: any;
+    on_activate?: (self: LuaEntity, data: string) => void;
+    on_step?: (self: LuaEntity, dtime: number) => void;
+    on_punch?: (
+      self: LuaEntity,
+      puncher: ObjectRef,
+      time_from_last_punch: number | null,
+      tool_capabilities: any,
+      dir: [number, number, number],
+    ) => void;
+    on_rightclick?: (self: LuaEntity, clicker: ObjectRef) => void;
+    get_staticdata?: (self: LuaEntity) => string;
+
+  }
+
+  export interface LuaEntity extends LuaEntityProperties {
+    name: string;
+    object: LuaEntitySAO;
+  }
+
+  export interface LuaEntitySAO extends ObjectRef {
+    getacceleration(): Vector3D;
+    getvelocity(): Vector3D;
+    getyaw(): number;
+    get_luaentity(): LuaEntity;
+    setacceleration(vec: Vector3D): void;
+    setsprite(p: Vector2D, num_frames: number, framelength: number, select_horiz_by_yawpitch: boolean): void;
+    settexturemod(mod: any): void;
+    setvelocity(vec: Vector3D): void;
+    setyaw(radians: number): void;
+  }
+
+  export interface Vector3D {
+    x: number;
+    y: number;
+    z: number;
+  }
+
+  export interface Vector2D {
+    x: number;
+    y: number;
+  }
+
+  export interface ObjectRef {
+    get_pos(): Vector3D;
+    get_armor_groups(): {[k: string]: any};
+    get_animation(): {
+      frames: Vector2D;
+      frame_speed: number;
+      frame_blend: number;
+      frame_loop: boolean;
+    };
+    get_hp(): number;
+    get_breath(): number;
+    get_inventory(): InvRef;
+    get_wielded_item(): ItemStack;
+    get_wield_index(): number;
+    get_wield_list(): string;
+    move_to(pos: Vector3D, continuous?: boolean): void;
+    punch(puncher: ObjectRef, time_from_last_punch: number, direction?: Vector3D): void;
+    remove(): void;
+    right_click(clicker: ObjectRef): void;
+    set_pos(pos: Vector3D): void;
+    set_armor_groups(groups: {[k: string]: any}): void;
+    set_hp(hitpoints: number): void;
+    set_properties(properties: {[k: string]: any}): void;
+    set_wielded_item(item: Item): boolean;
+    set_animation(p: Vector2D, frame_speed?: number, frame_blend?: number): void;
+    set_attach(parent: ObjectRef, str?: string, v1?: Vector3D, v2?: Vector3D): void;
+    set_detach(): void;
+    get_attach(): {
+      parent: ObjectRef;
+      bone: string;
+      position: Vector3D;
+      rotation: any;
+    };
+    set_bone_position(bone?: "", v1?: Vector3D, v2?: Vector3D): void;
+  }
+
+  export interface InvRef {
+    is_empty(listname: string): boolean;
+    get_size(listname: string): number;
+    set_size(listname: string, size: number): void;
+    get_width(listname: string): number;
+    set_width(listname: string, width: number): void;
+    get_stack(listname: string, index: number): ItemStack;
+    set_stack(listname: string, index: number, stack: Item): void;
+    get_list(listname: string): any;
+    set_list(listname: string, list: any): any;
+    get_lists(): {[k: string]: any};
+    set_lists(lists: {[k: string]: any}): void;
+    add_item(listname: string, stack: Item): ItemStack;
+    room_for_item(listname: string, stack: Item): boolean;
+    contains_item(listname: string, stack: Item): boolean;
+    remove_item(listname: string, stack: Item): ItemStack;
+  }
+
+  export type Item = ItemStack | ItemTable | string;
+
+  export interface ItemStack {
+    add_item(item: Item): void;
+    add_wear(amount: number): void;
+    clear(): void;
+    get_count(): number;
+    set_count(count: number): boolean;
+    get_definition(): any;
+    get_free_space(): number;
+    get_meta(): MetaDataRef;
+    get_metadata(): string;
+    get_name(): string;
+    set_name(name: string): boolean;
+    get_stack_max(): number;
+    get_tool_capabilities(): any;
+    get_wear(): number;
+    set_wear(wear: number): boolean;
+    is_empty(): boolean;
+    is_known(): boolean;
+    item_fits(item: Item): boolean;
+    peek_item(n?: number): ItemStack;
+    replace(item: Item | string): void;
+    take_item(n?: number): ItemStack;
+    to_string(): string;
+    to_table(): any;
+  }
+
+  export interface ItemTable {
+    name: string;
+    count: number;
+    wear: number;
+    metadata: string;
+  }
+
+  export interface MetaDataRef {}
+
+  export interface ParticleDefinition {
+    pos: Vector3D;
+    velocity: Vector3D;
+    acceleration: Vector3D;
+    expirationtime: number;
+    size: number;
+    collisiondetection: boolean;
+    collision_removal: boolean;
+    vertical: boolean;
+    glow: number;
+    texture: string;
+    animation?: TileAnimationDefinition;
+    playername?: string;
+  }
+
+  export type TileAnimationDefinition = any;
+
+  export interface ParticleSpawnerDefinition {
+    amount: number;
+    time: number;
+    minpos: Vector3D;
+    maxpos: Vector3D;
+    minvel: Vector3D;
+    maxvel: Vector3D;
+    minacc: Vector3D;
+    maxacc: Vector3D;
+    minexptime: number;
+    maxexptime: number;
+    minsize: number;
+    maxsize: number;
+    colissiondetection: number;
+    vertical: boolean;
+    texture: string;
+    playername?: string;
+  }
 }
 
-export type PlayerObject = ObjectRef;
-
-export interface NodeDefinition {
-  drawtype: DrawType;
-  visual_scale?: number;
-  tiles: string | [string, string, string, string, string, string];
-  special_tiles?: string[];
-  use_texture_alpha?: boolean;
-  alpha?: number;
-  post_effect_color?: Color;
-  inventory_image?: string | [string, string, string];
-  wield_image?: string | [string, string, string];
-  paramtype?: 'none' | 'light';
-  paramtype2?: 'wallmounted' | 'facedir';
-  is_ground_content?: boolean;
-  sunlight_propagates?: boolean;
-  walkable?: boolean;
-  pointable?: boolean;
-  diggable?: boolean;
-  climbable?: boolean;
-  buildable_to?: boolean;
-  drop?: Item | Item[] | {max_items: number; items: DropDefinition[]; };
-  stack_max?: number;
-  liquidtype?: 'none' | 'source' | 'flowing';
-  liquid_alternative_flowing?: any;
-  liquid_alternative_source?: any;
-  liquid_viscosity?: number;
-  liquid_renewable?: boolean;
-  light_source?: number;
-  damage_per_second?: number;
-  node_box?: NodeBox;
-  selection_box?: NodeBox;
-  collision_box?: NodeBox;
-  sounds?: {
-    footstep?: SimpleSoundSpec;
-    dig?: SimpleSoundSpec;
-    dug?: SimpleSoundSpec;
-  };
-  on_construct?: (pos: Vector3D) => void;
-  on_destruct?: (pos: Vector3D) => void;
-  after_destruct?: (pos: Vector3D, oldnode: Node) => void;
-  on_place?: (item: ItemStack, placer: ObjectRef, pos: Vector3D, pointedthing: PointedThing) => void;
-  on_drop?: (item: ItemStack, dropper: ObjectRef, pos: Vector3D) => void;
-  on_use?: (item: ItemStack, player: ObjectRef, pointedthing: PointedThing) => void;
-  on_punch?: (item: ItemStack, node: Node, player: ObjectRef, pointedthing: PointedThing) => void;
-  on_dig?: (pos: Vector3D, node: Node, player: ObjectRef) => void;
-  on_timer?: (pos: Vector3D, elapsed: number) => void;
-  on_receive_fields?: (pos: Vector3D, formname: any, fields: {[k: string]: any}, sender: PlayerObject) => void;
-  allow_metadata_inventory_move?: (
-    pos: Vector3D, from_list: string, from_index: number, to_list: string,
-    to_index: number, count: number, player: PlayerObject,
-  ) => void;
-  allow_metadata_inventory_put?: (
-    pos: Vector3D, listname: string, index: number,
-    stack: ItemStack, player: PlayerObject,
-  ) => void;
-  allow_metadta_inventory_take?: (
-    pos: Vector3D, listname: string, index: number, stack: ItemStack, player: PlayerObject,
-  ) => void;
-  on_metadata_inventory_move?: (
-    pos: Vector3D, from_list: string, from_index: number, to_list: string,
-    to_index: number, count: number, player: PlayerObject,
-  ) => void;
-  on_metadata_inventory_put?: (
-    pos: Vector3D, listname: string, index: number, stack: ItemStack, player: PlayerObject,
-  ) => void;
-  on_metadta_inventory_take?: (
-    pos: Vector3D, listname: string, index: number, stack: ItemStack, player: PlayerObject,
-  ) => void;
-
-  after_place_node?: (pos: Vector3D, placer: ObjectRef, item: ItemStack, pointedthing: PointedThing) => void;
-  can_dig?: (pos: Vector3D, player: PlayerObject) => void;
-  after_dig_node?: (pos: Vector3D, oldnode: Node, old_meta: MetaDataRef, digger: ObjectRef) => void;
-  on_rightclick?: (pos: Vector3D, node: Node, player: PlayerObject, stack: ItemStack, pointed: PointedThing) => void;
-
-  on_blast?: (pos: Vector3D, intensity?: number) => void;
-}
-
-export interface Node {
-  name: string;
-  param1: any;
-  param2: any;
-}
-
-export type PointedThing = PointedObject | PointedNothing | PointedNode;
-
-export interface PointedObject {
-  type: 'object';
-  ref: ObjectRef;
-}
-
-export interface PointedNothing {
-  type: 'nothing';
-}
-
-export interface PointedNode {
-  type: 'node';
-  under: Vector3D;
-  above: Vector3D;
-}
-
-export interface DropDefinition {
-  items: Item[];
-  rarity: number;
-  tools: string[];
-}
-
-export type SimpleSoundSpec = string | {name?: string; gain?: number};
-
-export type NodeBox = NodeBoxRegular | NodeBoxWallmounted | NodeBoxConnected;
-
-export interface NodeBoxRegular {
-  type: 'regular';
-}
-
-export interface NodeBoxWallmounted {
-  type: 'fixed';
-  fixed: Box | Box[];
-}
-
-export interface NodeBoxConnected {
-  type: 'connected';
-  fixed: Box | Box[];
-  connect_top: Box | Box[];
-  connect_bottom: Box | Box[];
-  connect_front: Box | Box[];
-  connect_left: Box | Box[];
-  connect_right: Box | Box[];
-  connect_back: Box | Box[];
-}
-
-export type Box = [number, number, number, number, number, number];
-
-export interface Color {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
-}
-
-export type DrawType
-  = 'normal'
-  | 'airlike'
-  | 'allfaces'
-  | 'allfaces_optional'
-  | 'glass_like'
-  | 'glasslike_framed'
-  | 'glasslike_framed_optional'
-  | 'liquid'
-  | 'flowingliquied'
-  | 'torchlike'
-  | 'signlike'
-  | 'plantlike'
-  | 'raillike'
-  | 'fencelike'
-  | 'firelike'
-  | 'nodebox'
-  | 'mesh';
-
-export interface LuaEntityProperties {
-  initial_properties?: any;
-  on_activate?: (self: LuaEntity, data: string) => void;
-  on_step?: (self: LuaEntity, dtime: number) => void;
-  on_punch?: (
-    self: LuaEntity,
-    puncher: ObjectRef,
-    time_from_last_punch: number | null,
-    tool_capabilities: any,
-    dir: [number, number, number],
-  ) => void;
-  on_rightclick?: (self: LuaEntity, clicker: ObjectRef) => void;
-  get_staticdata?: (self: LuaEntity) => string;
-
-}
-
-export interface LuaEntity extends LuaEntityProperties {
-  name: string;
-  object: LuaEntitySAO;
-}
-
-export interface LuaEntitySAO extends ObjectRef {
-  getacceleration(): Vector3D;
-  getvelocity(): Vector3D;
-  getyaw(): number;
-  get_luaentity(): LuaEntity;
-  setacceleration(vec: Vector3D): void;
-  setsprite(p: Vector2D, num_frames: number, framelength: number, select_horiz_by_yawpitch: boolean): void;
-  settexturemod(mod: any): void;
-  setvelocity(vec: Vector3D): void;
-  setyaw(radians: number): void;
-}
-
-export interface Vector3D {
-  x: number;
-  y: number;
-  z: number;
-}
-
-export interface Vector2D {
-  x: number;
-  y: number;
-}
-
-export interface ObjectRef {
-  get_pos(): Vector3D;
-  get_armor_groups(): {[k: string]: any};
-  get_animation(): {
-    frames: Vector2D;
-    frame_speed: number;
-    frame_blend: number;
-    frame_loop: boolean;
-  };
-  get_hp(): number;
-  get_breath(): number;
-  get_inventory(): InvRef;
-  get_wielded_item(): ItemStack;
-  get_wield_index(): number;
-  get_wield_list(): string;
-  move_to(pos: Vector3D, continuous?: boolean): void;
-  punch(puncher: ObjectRef, time_from_last_punch: number, direction?: Vector3D): void;
-  remove(): void;
-  right_click(clicker: ObjectRef): void;
-  set_pos(pos: Vector3D): void;
-  set_armor_groups(groups: {[k: string]: any}): void;
-  set_hp(hitpoints: number): void;
-  set_properties(properties: {[k: string]: any}): void;
-  set_wielded_item(item: Item): boolean;
-  set_animation(p: Vector2D, frame_speed?: number, frame_blend?: number): void;
-  set_attach(parent: ObjectRef, str?: string, v1?: Vector3D, v2?: Vector3D): void;
-  set_detach(): void;
-  get_attach(): {
-    parent: ObjectRef;
-    bone: string;
-    position: Vector3D;
-    rotation: any;
-  };
-  set_bone_position(bone?: "", v1?: Vector3D, v2?: Vector3D): void;
-}
-
-export interface InvRef {
-  is_empty(listname: string): boolean;
-  get_size(listname: string): number;
-  set_size(listname: string, size: number): void;
-  get_width(listname: string): number;
-  set_width(listname: string, width: number): void;
-  get_stack(listname: string, index: number): ItemStack;
-  set_stack(listname: string, index: number, stack: Item): void;
-  get_list(listname: string): any;
-  set_list(listname: string, list: any): any;
-  get_lists(): {[k: string]: any};
-  set_lists(lists: {[k: string]: any}): void;
-  add_item(listname: string, stack: Item): ItemStack;
-  room_for_item(listname: string, stack: Item): boolean;
-  contains_item(listname: string, stack: Item): boolean;
-  remove_item(listname: string, stack: Item): ItemStack;
-}
-
-export type Item = ItemStack | ItemTable | string;
-
-export interface ItemStack {
-  add_item(item: Item): void;
-  add_wear(amount: number): void;
-  clear(): void;
-  get_count(): number;
-  set_count(count: number): boolean;
-  get_definition(): any;
-  get_free_space(): number;
-  get_meta(): MetaDataRef;
-  get_metadata(): string;
-  get_name(): string;
-  set_name(name: string): boolean;
-  get_stack_max(): number;
-  get_tool_capabilities(): any;
-  get_wear(): number;
-  set_wear(wear: number): boolean;
-  is_empty(): boolean;
-  is_known(): boolean;
-  item_fits(item: Item): boolean;
-  peek_item(n?: number): ItemStack;
-  replace(item: Item | string): void;
-  take_item(n?: number): ItemStack;
-  to_string(): string;
-  to_table(): any;
-}
-
-export interface ItemTable {
-  name: string;
-  count: number;
-  wear: number;
-  metadata: string;
-}
-
-export interface MetaDataRef {}
-
-export interface ParticleDefinition {
-  pos: Vector3D;
-  velocity: Vector3D;
-  acceleration: Vector3D;
-  expirationtime: number;
-  size: number;
-  collisiondetection: boolean;
-  collision_removal: boolean;
-  vertical: boolean;
-  glow: number;
-  texture: string;
-  animation?: TileAnimationDefinition;
-  playername?: string;
-}
-
-export type TileAnimationDefinition = any;
-
-export interface ParticleSpawnerDefinition {
-  amount: number;
-  time: number;
-  minpos: Vector3D;
-  maxpos: Vector3D;
-  minvel: Vector3D;
-  maxvel: Vector3D;
-  minacc: Vector3D;
-  maxacc: Vector3D;
-  minexptime: number;
-  maxexptime: number;
-  minsize: number;
-  maxsize: number;
-  colissiondetection: number;
-  vertical: boolean;
-  texture: string;
-  playername?: string;
-}
+export {}
